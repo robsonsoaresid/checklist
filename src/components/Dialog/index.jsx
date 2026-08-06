@@ -1,11 +1,20 @@
-import React, { useRef } from 'react';
+import React, {useEffect, useRef } from 'react';
 import './dialog.style.css'
 
-export function Dialog() {
+export function Dialog({ isOpen, onClose }) {
   // não deveríamos fazer buscas no DOM desse jeito!
   //const dialog = document.querySelector("dialog");
 
 const dialogRef = useRef(null)
+
+useEffect(() => {
+  console.log('Deveríamos mostrar a modal', isOpen)
+  if (isOpen) {
+    openDialog()
+  } else {
+    closeDialog()
+  }
+}, [isOpen])
  
   // "Show the dialog" button opens the dialog modally
  const openDialog = () => {
@@ -20,10 +29,9 @@ const dialogRef = useRef(null)
   return (
     <React.Fragment>
       <dialog ref={dialogRef}>
-        <button autoFocus onClick={closeDialog}>Close</button>
+        <button autoFocus onClick={onClose}>Close</button>
         <p>This modal dialog has a groovy backdrop!</p>
       </dialog>
-      <button onClick={openDialog}>Show the dialog</button>
     </React.Fragment>
   );
 }

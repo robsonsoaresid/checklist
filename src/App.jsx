@@ -120,7 +120,22 @@ function App() {
           </Heading>
         </Header>
         <ChecklistsWrapper>
-          <SubHeading>Para estudar</SubHeading>
+
+          {/* <TodoGroup
+          heading="Para estudadar"
+          items={todos.filter(t => t.completed)}
+          onToggleCompleted={toggleTodoCompleted}
+          onDeleteTodo={deleteTodo}
+          />
+
+          <TodoGroup
+          heading="Concluído"
+          items={todos.filter(t => t.completed)}
+          onToggleCompleted={toggleTodoCompleted}
+          onDeleteTodo={deleteTodo}
+          /> */}
+
+          {/* <SubHeading>Para estudar</SubHeading>
           <ToDoList>
             {todos.filter(t => !t.completed).map(function (t) {
               return <ToDoItem 
@@ -142,8 +157,8 @@ function App() {
               />;
              
             })}
-          </ToDoList>
-          <Footer>
+          </ToDoList>*/}
+          <Footer> 
             <Dialog isOpen={showDialog} onClose={toggleDialog}>
               <TodoForm onSubmit={addTodo} />
             </Dialog>

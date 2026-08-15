@@ -9,8 +9,10 @@ import { IconPlus, IconSchool } from "./components/icons";
 import { SubHeading } from "./components/SubHeading";
 import { ToDoItem } from "./components/ToDoItem";
 import { ToDoList } from "./components/ToDoList";
-import { useState } from "react";
+import { use, useState } from "react";
 import { TodoForm } from "./components/TodoForm";
+import TodoContext from "./components/TodoProvider/TodoContext";
+import { TodoGroup } from "./components/TodoGroup";
 
 // const todos = [
 //   {
@@ -55,61 +57,16 @@ import { TodoForm } from "./components/TodoForm";
 
 function App() {
   const [showDialog, setShowDialog] = useState(false);
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      description: "JSX e componentes",
-      completed: false,
-      createdAt: "2022-10-31",
-    },
-    {
-      id: 2,
-      description: "Controle de inputs e formulários controlados",
-      completed: true,
-      createdAt: "2022-10-31",
-    },
-  ]);
+  const { todos, addTodo } = use(TodoContext);
 
   const toggleDialog = () => {
     setShowDialog(!showDialog);
-    console.log("alternar modal");
   };
 
-  const addTodo = (formData) => {
-    const description = formData.get('description')
-    setTodos(prevState => {
-      const todo = {
-      id: prevState.length + 1,
-      description,
-      completed: false,
-      createdAt: new Date().toISOString()
-      }
-      return [...prevState, todo]
-    })
-    toggleDialog()
+  const handleFormSubmit = (FormData) => {
+    addTodo(FormData);
+    toggleDialog();
   };
-
-  const toggleTodoCompleted = (todo) => {
-    setTodos(prevState => {
-      return prevState.map(t => {
-        if (t.id == todo.id) {
-          return {
-            ...t,
-            completed: !t.completed
-          }
-        }
-        return t
-      })
-    })
-  }
-
-  const deleteTodo = (todo) => {
-    setTodos(prevState => {
-      return prevState.filter(t => t.id != todo.id)
-    })
-  }
-
-
 
   return (
     <main>
@@ -120,47 +77,19 @@ function App() {
           </Heading>
         </Header>
         <ChecklistsWrapper>
-
-          {/* <TodoGroup
-          heading="Para estudadar"
-          items={todos.filter(t => t.completed)}
-          onToggleCompleted={toggleTodoCompleted}
-          onDeleteTodo={deleteTodo}
+          <TodoGroup
+            heading="Para estudadar"
+            items={todos.filter(t => !t.completed)}
           />
 
           <TodoGroup
-          heading="Concluído"
-          items={todos.filter(t => t.completed)}
-          onToggleCompleted={toggleTodoCompleted}
-          onDeleteTodo={deleteTodo}
-          /> */}
+            heading="Concluído"
+            items={todos.filter(t => t.completed)}
+          />
 
-          {/* <SubHeading>Para estudar</SubHeading>
-          <ToDoList>
-            {todos.filter(t => !t.completed).map(function (t) {
-              return <ToDoItem 
-              key={t.id} 
-              item={t} 
-              onToggleCompleted={toggleTodoCompleted}
-              onDeleteTodo={deleteTodo}
-              />;
-            })}
-          </ToDoList>
-          <SubHeading>Concluído</SubHeading>
-          <ToDoList>
-            {todos.filter(t => t.completed).map(function (t) {
-              return <ToDoItem 
-              key={t.id} 
-              item={t} 
-              onToggleCompleted={toggleTodoCompleted}
-              onDeleteTodo={deleteTodo}
-              />;
-             
-            })}
-          </ToDoList>*/}
-          <Footer> 
+          <Footer>
             <Dialog isOpen={showDialog} onClose={toggleDialog}>
-              <TodoForm onSubmit={addTodo} />
+              <TodoForm onSubmit={handleFormSubmit} />
             </Dialog>
             <FabButton onClick={toggleDialog}>
               <IconPlus />

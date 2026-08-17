@@ -10,6 +10,7 @@ import { TodoForm } from "./components/TodoForm";
 import TodoContext from "./components/TodoProvider/TodoContext";
 import { TodoGroup } from "./components/TodoGroup";
 import { use } from "react";
+import { EmptyState } from "./components/EmptyState";
 
 function App() {
   const {
@@ -18,12 +19,17 @@ function App() {
     showDialog,
     openFormTodoDialog,
     closeFormTodoDialog,
-    setselectedTodo,
+    selectedTodo,
+    editTodo
   } = use(TodoContext);
 
   const handleFormSubmit = (FormData) => {
-    addTodo(FormData);
-    openFormTodoDialog();
+    if (selectedTodo) {
+      editTodo(FormData)
+    } else {
+      addTodo(FormData)
+    }
+    closeFormTodoDialog();
   };
 
   return (
@@ -40,6 +46,8 @@ function App() {
             items={todos.filter((t) => !t.completed)}
           />
 
+          {todos.length == 0 && <EmptyState />}
+
           <TodoGroup
             heading="Concluído"
             items={todos.filter((t) => t.completed)}
@@ -49,10 +57,10 @@ function App() {
             <Dialog isOpen={showDialog} onClose={closeFormTodoDialog}>
               <TodoForm 
               onSubmit={handleFormSubmit} 
-              defaultValue={setselectedTodo?.description}
+              defaultValue={selectedTodo?.description}
               />
             </Dialog>
-            <FabButton onClick={openFormTodoDialog}>
+            <FabButton onClick={() => openFormTodoDialog()}>
               <IconPlus />
             </FabButton>
           </Footer>
